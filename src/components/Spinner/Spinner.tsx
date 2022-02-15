@@ -1,5 +1,5 @@
-import React from 'react'
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
 const Wrapper = styled.div`
     display: flex;
@@ -7,7 +7,7 @@ const Wrapper = styled.div`
     align-items: center;
 
     :after {
-        content: '';
+        content: "";
         width: 64px;
         height: 64px;
         margin: 8px;
@@ -27,11 +27,11 @@ const Wrapper = styled.div`
     }
 `;
 
-export const Spinner = () => {
+export const Spinner: React.FC = () => {
     return (
         <Wrapper>
             <h1>Loading...</h1>
             <div></div>
         </Wrapper>
-    )
-}
+    );
+};

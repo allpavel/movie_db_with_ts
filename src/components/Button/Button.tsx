@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import PropTypes from "prop-types";
 
 const StyledButton = styled.button`
     display: block;
@@ -22,11 +21,11 @@ const StyledButton = styled.button`
     }
 `;
 
-export const Button = ({ text, onClick }) => {
-    return <StyledButton onClick={onClick}>{text}</StyledButton>;
+type Props = {
+    text: string;
+    onClick: () => void;
 };
 
-Button.propTypes = {
-    text: PropTypes.string,
-    onClick: PropTypes.func,
+export const Button: React.FC<Props> = ({ text, onClick }) => {
+    return <StyledButton onClick={onClick}>{text}</StyledButton>;
 };

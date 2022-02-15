@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
-import MovieService from "../API/MovieService";
+import MovieService, { Movie } from "../API/MovieService";
 import { getItemFromStorage } from "../utils/utils";
 
 const initialState = {
     page: 0,
-    results: [],
+    results: [] as Movie[],
     total_pages: 0,
-    total_results: 0,
 };
 
 export const useGetPopularMovies = () => {
@@ -16,7 +15,7 @@ export const useGetPopularMovies = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [isLoadingMoreMovies, setIsLoadingMoreMovies] = useState(false);
 
-    const getMovies = async (searchTerm = "", page) => {
+    const getMovies = async (searchTerm = "", page: number) => {
         try {
             setIsLoading(true);
             const movies = await MovieService.getPopularMovies(
