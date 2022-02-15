@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
-import MovieService from "../API/MovieService";
+import MovieService, { Movie, Cast, Crew } from "../API/MovieService";
 import { getItemFromStorage } from "../utils/utils";
 
-export const useGetMovie = (id) => {
-    const [movie, setMovie] = useState({});
-    const [isLoading, setIsLoading] = useState(true);
-    const [loadError, setLoadError] = useState(false);
+export type MovieState = Movie & { actors: Cast[]; directors: Crew[] };
 
-    const getMovies = async (id) => {
+export const useGetMovie = (id: number) => {
+    const [movie, setMovie] = useState<MovieState>({} as MovieState);
+    const [isLoading, setIsLoading] = useState(true);
+    const [loadError, setLoadError] = useState<boolean>(false);
+
+    const getMovies = async (id: number) => {
         try {
             const movie = await MovieService.getMovieById(id);
             const credits = await MovieService.getMovieCredits(id);
@@ -19,7 +21,7 @@ export const useGetMovie = (id) => {
                 actors: credits.cast,
                 directors,
             });
-        } catch (error) {
+        } catch (error: any) {
             setLoadError(error);
         } finally {
             setIsLoading(false);
@@ -27,7 +29,7 @@ export const useGetMovie = (id) => {
     };
 
     useEffect(() => {
-        const sessionState = getItemFromStorage(id);
+        const sessionState = getItemFromStorage(id.toString());
         if (sessionState) {
             setMovie(sessionState);
             setIsLoading(false);
@@ -37,7 +39,7 @@ export const useGetMovie = (id) => {
     }, [id]);
 
     useEffect(() => {
-        sessionStorage.setItem(id, JSON.stringify(movie));
+        sessionStorage.setItem(id.toString(), JSON.stringify(movie));
     }, [id, movie]);
 
     return { movie, isLoading, loadError };
