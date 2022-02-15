@@ -26,7 +26,7 @@ const Image = styled.img`
 
 type Props = {
     image: string;
-    movieId: number;
+    movieId?: number;
 };
 
 export const Thumbnail: React.FC<Props> = ({ image, movieId }) => {
@@ -35,6 +35,8 @@ export const Thumbnail: React.FC<Props> = ({ image, movieId }) => {
     const handleNavigate = () => {
         navigate(`${movieId}`);
     };
+    if (movieId)
+        return <Image src={image} alt="movie-thumb" onClick={handleNavigate} />;
 
-    return <Image src={image} alt="movie-thumb" onClick={handleNavigate} />;
+    return <Image src={image} alt="movie-thumb" />;
 };

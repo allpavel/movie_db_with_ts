@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
 const Wrapper = styled.section`
@@ -31,7 +30,11 @@ const Content = styled.div`
     }
 `;
 
-export const BreadCrumb = ({ movieTitle }) => {
+type Props = {
+    movieTitle: string;
+};
+
+export const BreadCrumb: React.FC<Props> = ({ movieTitle }) => {
     return (
         <Wrapper>
             <Content>
@@ -43,8 +46,4 @@ export const BreadCrumb = ({ movieTitle }) => {
             </Content>
         </Wrapper>
     );
-};
-
-BreadCrumb.propTypes = {
-    movieTitle: PropTypes.string,
 };
