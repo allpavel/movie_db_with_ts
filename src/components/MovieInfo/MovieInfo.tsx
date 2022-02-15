@@ -1,18 +1,18 @@
-import React from "react";
-import styled from "styled-components";
-import { IMAGE_BASE_URL, BACKDROP_SIZE, POSTER_SIZE } from "../../API/config";
-import { Thumbnail } from "../Thumbnail/Thumbnail";
-import { MovieState } from "../../hooks/useGetMovie";
+import React, { useContext } from "react"
+import styled from "styled-components"
+import MovieService from "../../API/MovieService"
+import { IMAGE_BASE_URL, BACKDROP_SIZE, POSTER_SIZE } from "../../API/config"
+import { Thumbnail } from "../Thumbnail/Thumbnail"
+import { MovieState } from "../../hooks/useGetMovie"
+import { Rating } from "../Rating/Rating"
+import { Context } from "../../context"
 
 type StyleProps = {
-    backdrop: string;
-};
+    backdrop: string
+}
 
 const Wrapper = styled.section<StyleProps>`
-    background: ${({ backdrop }) =>
-        backdrop
-            ? `url(${IMAGE_BASE_URL}${BACKDROP_SIZE}${backdrop})`
-            : "#000"};
+    background: ${({ backdrop }) => (backdrop ? `url(${IMAGE_BASE_URL}${BACKDROP_SIZE}${backdrop})` : "#000")};
     background-size: cover;
     background-position: center;
     padding: 40px 20px;
@@ -26,7 +26,7 @@ const Wrapper = styled.section<StyleProps>`
             opacity: 1;
         }
     }
-`;
+`
 
 const Content = styled.div`
     display: flex;
@@ -47,7 +47,7 @@ const Content = styled.div`
             max-width: 720px;
         }
     }
-`;
+`
 
 const Text = styled.div`
     color: white;
@@ -87,23 +87,23 @@ const Text = styled.div`
             font-size: 1.2rem;
         }
     }
-`;
+`
 
 type Props = {
-    movie: MovieState;
-};
+    movie: MovieState
+}
 
 export const MovieInfo: React.FC<Props> = ({ movie }) => {
+    const [user] = useContext(Context)
+
+    const handleRating = async (value: string) => {
+        const rating = await MovieService.rateMovie(user.sessionId, movie.id, value)
+        return rating
+    }
     return (
         <Wrapper backdrop={movie.backdrop_path}>
             <Content>
-                <Thumbnail
-                    image={
-                        movie.poster_path
-                            ? `${IMAGE_BASE_URL}${POSTER_SIZE}${movie.poster_path}`
-                            : ""
-                    }
-                />
+                <Thumbnail image={movie.poster_path ? `${IMAGE_BASE_URL}${POSTER_SIZE}${movie.poster_path}` : ""} />
                 <Text>
                     <h1>{movie.title}</h1>
                     <h3>PLOT</h3>
@@ -114,16 +114,20 @@ export const MovieInfo: React.FC<Props> = ({ movie }) => {
                             <div className="score">{movie.vote_average}</div>
                         </div>
                         <div className="director">
-                            <h3>
-                                DIRECTOR{movie.directors.length > 1 ? "S" : ""}
-                            </h3>
+                            <h3>DIRECTOR{movie.directors.length > 1 ? "S" : ""}</h3>
                             {movie.directors.map((director) => (
                                 <p key={director.credit_id}>{director.name}</p>
                             ))}
                         </div>
                     </div>
+                    {user && (
+                        <div>
+                            <p>Rate Movie</p>
+                            <Rating callback={handleRating} />
+                        </div>
+                    )}
                 </Text>
             </Content>
         </Wrapper>
-    );
-};
+    )
+}

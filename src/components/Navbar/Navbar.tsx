@@ -1,6 +1,7 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
-import styled from "styled-components";
+import React, { useContext } from "react"
+import { NavLink } from "react-router-dom"
+import styled from "styled-components"
+import { Context } from "../../context"
 
 const NavbarWrapper = styled.nav`
     flex: 1 1 auto;
@@ -37,9 +38,10 @@ const NavbarWrapper = styled.nav`
     a:hover {
         border-bottom: 2px solid black;
     }
-`;
+`
 
 export const Navbar: React.FC = () => {
+    const [user] = useContext(Context)
     return (
         <NavbarWrapper>
             <ul>
@@ -55,7 +57,14 @@ export const Navbar: React.FC = () => {
                 <li>
                     <NavLink to="lists">Lists</NavLink>
                 </li>
+                {user ? (
+                    <span>You are logged as: {user.username}</span>
+                ) : (
+                    <li>
+                        <NavLink to="login">Login</NavLink>
+                    </li>
+                )}
             </ul>
         </NavbarWrapper>
-    );
-};
+    )
+}
